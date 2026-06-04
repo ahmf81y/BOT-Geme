@@ -2,29 +2,56 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تست صدا</title>
+    <title>سایکو-بات امیررضا</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; text-align: center; padding: 50px; }
+        .box { border: 2px solid #0f0; padding: 30px; border-radius: 20px; display: inline-block; }
+        button { padding: 15px 30px; font-size: 20px; cursor: pointer; background: #222; color: #0f0; border: 2px solid #0f0; border-radius: 10px; margin: 10px; }
+        button:hover { background: #0f0; color: #000; }
+        #text { margin-top: 25px; font-size: 22px; }
+    </style>
 </head>
-<body style="background:black; color:green; text-align:center;">
-    <h1>رباتِ سخنگو</h1>
-    
-    <button id="startBtn" onclick="initAudio()">اول کلیک کن تا صدا فعال شه</button>
-    <br><br>
-    <button onclick="playTestSound()">تست صدای کلیک</button>
+<body>
+    <div class="box">
+        <h1>🎮 گیم‌مسترِ امیررضا</h1>
+        <button id="startBtn" onclick="enableAudio()">فعال‌سازی سیستم</button>
+        <p id="text">اول دکمه بالا رو بزن تا سیستم فعال شه...</p>
+        
+        <div id="gameUI" style="display:none;">
+            <button onclick="playClick(); showResult('مادی‌گرا')">پول‌پرستم!</button>
+            <button onclick="playClick(); showResult('ماجراجو')">ماجراجوم!</button>
+            <button onclick="playClick(); showResult('مهربون')">شکموئم!</button>
+        </div>
+    </div>
 
     <script>
-        const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
+        // لینک اختصاصی خودت
+        const audio = new Audio('https://dl.sedatoseda.com/sound/Mouse-Click%20(2).mp3');
 
-        function initAudio() {
-            clickSound.play().then(() => {
-                clickSound.pause(); // صدا رو بلافاصله قطع میکنیم که مزاحم نشه
-                document.getElementById('startBtn').innerText = "صدا فعال شد!";
-                console.log("مجوز صدا گرفته شد");
+        function enableAudio() {
+            audio.play().then(() => {
+                audio.pause();
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('gameUI').style.display = 'block';
+                document.getElementById('text').innerText = "سیستم آماده‌ست! انتخابت چیه؟";
             });
         }
 
-        function playTestSound() {
-            clickSound.currentTime = 0;
-            clickSound.play();
+        function playClick() {
+            audio.currentTime = 0;
+            audio.play();
+        }
+
+        function showResult(type) {
+            let answer = "";
+            if(type === 'مادی‌گرا') answer = "تو آدمِ اقتصادی و باهوشی هستی، فقط پول برات مهمه!";
+            if(type === 'ماجراجو') answer = "تو عاشقِ کشف کردنِ چیزای جدیدی، یه ماجراجویِ واقعی!";
+            if(type === 'مهربون') answer = "تو خیلی ساده‌لوح و شکمویی، ولی قلبت از طلاست!";
+            
+            document.getElementById('text').innerText = "تحلیل: " + answer;
+            const synth = new SpeechSynthesisUtterance(answer);
+            synth.lang = 'fa-IR';
+            window.speechSynthesis.speak(synth);
         }
     </script>
 </body>
