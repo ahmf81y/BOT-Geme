@@ -2,65 +2,45 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>گیم‌مسترِ امیررضا</title>
+    <title>سایکو-بات امیررضا</title>
     <style>
-        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { border: 2px solid #00ff41; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 15px #00ff41; }
-        button { padding: 15px 30px; font-size: 20px; cursor: pointer; background: transparent; color: #00ff41; border: 2px solid #00ff41; border-radius: 10px; }
-        #text { margin-top: 25px; font-size: 22px; font-weight: bold; }
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; text-align: center; padding: 50px; }
+        .box { border: 2px solid #0f0; padding: 30px; border-radius: 20px; display: inline-block; }
+        .btn-container { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
+        button { padding: 15px 25px; font-size: 18px; cursor: pointer; background: #222; color: #0f0; border: 2px solid #0f0; border-radius: 10px; transition: 0.2s; }
+        button:hover { background: #0f0; color: #000; }
+        #question { font-size: 24px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h1>🎮 گیم‌مسترِ امیررضا</h1>
-        <button onclick="start()">🎤 شروع چالش</button>
-        <p id="text">بگو "بازی" تا چالشت رو شروع کنم...</p>
+        <h1 id="question">اگه یه کلید جادویی پیدا کنی، باهاش چیکار می‌کنی؟</h1>
+        <div class="btn-container">
+            <button onclick="playClick(); showResult('مادی‌گرا')">می‌فروشمش!</button>
+            <button onclick="playClick(); showResult('ماجراجو')">بازش می‌کنم!</button>
+            <button onclick="playClick(); showResult('مهربون')">می‌خورمش! (چون گشنمه)</button>
+        </div>
+        <p id="result" style="margin-top: 30px; font-size: 20px;"></p>
     </div>
 
     <script>
-        let secretNum = 0;
-        let gameActive = false;
-        
-        // تبدیل اعداد فارسی به انگلیسی
-        function toEnglish(str) {
-            return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        // صدای کلیک مکانیکی
+        function playClick() {
+            const audio = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
+            audio.play();
         }
 
-        const numberMap = { "یک": 1, "دو": 2, "سه": 3, "چهار": 4, "پنج": 5, "شش": 6, "هفت": 7, "هشت": 8, "نه": 9, "ده": 10, "یازده": 11, "دوازده": 12, "سیزده": 13, "چهارده": 14, "پانزده": 15, "شانزده": 16, "هفده": 17, "هجده": 18, "نوزده": 19, "بیست": 20 };
-
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'fa-IR';
-
-        function start() { 
-            rec.start(); 
-            document.getElementById('text').innerText = "دارم گوش میدم..."; 
-        }
-
-        rec.onresult = (event) => {
-            let input = event.results[0][0].transcript;
-            input = toEnglish(input); // تبدیل اعداد فارسی به انگلیسی
-            let output = "";
-
-            if (input.includes("بازی")) {
-                secretNum = Math.floor(Math.random() * 20) + 1;
-                gameActive = true;
-                output = "یه عدد بین ۱ تا ۲۰ انتخاب کردم. حدس بزن؟";
-            } else if (gameActive) {
-                let guess = parseInt(input.match(/\d+/));
-                if (isNaN(guess)) { 
-                    for (let key in numberMap) { if (input.includes(key)) guess = numberMap[key]; } 
-                }
-
-                if (isNaN(guess)) { output = "عددی نشنیدم، دوباره بگو!"; }
-                else if (guess === secretNum) { output = "ایول! درست حدس زدی، تو بردی!"; gameActive = false; }
-                else { output = guess < secretNum ? "نه، عدد بزرگتره!" : "نه، عدد کوچیکتره!"; }
-            } else { output = "اول بگو 'بازی' تا شروع کنیم."; }
-
-            document.getElementById('text').innerText = output;
-            const synth = new SpeechSynthesisUtterance(output);
+        function showResult(type) {
+            let answer = "";
+            if(type === 'مادی‌گرا') answer = "تو آدمِ اقتصادی و باهوشی هستی، فقط پول برات مهمه!";
+            if(type === 'ماجراجو') answer = "تو عاشقِ کشف کردنِ چیزای جدیدی، یه ماجراجویِ واقعی!";
+            if(type === 'مهربون') answer = "تو خیلی ساده‌لوح و شکمویی، ولی قلبت از طلاست! 😂";
+            
+            document.getElementById('result').innerText = "تحلیل ربات: " + answer;
+            const synth = new SpeechSynthesisUtterance(answer);
             synth.lang = 'fa-IR';
             window.speechSynthesis.speak(synth);
-        };
+        }
     </script>
 </body>
 </html>
