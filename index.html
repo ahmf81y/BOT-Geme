@@ -1,24 +1,15 @@
-<script>
-        // تعریف متغیر صدا به صورت سراسری
-        const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سایکو-بات</title>
+</head>
+<body style="background:black; color:green; text-align:center;">
+    <h1>تستِ ربات</h1>
+    <button onclick="alert('کار کرد!')">تست کلیک</button>
 
-        function playClick() {
-            clickSound.currentTime = 0; // برای اینکه اگه سریع پشت هم زدن، صدا قطع نشه
-            clickSound.play();
-        }
-
-        function showResult(type) {
-            playClick(); // پخش صدا همزمان با کلیک
-            
-            let answer = "";
-            if(type === 'مادی‌گرا') answer = "تو آدمِ اقتصادی و باهوشی هستی، فقط پول برات مهمه!";
-            if(type === 'ماجراجو') answer = "تو عاشقِ کشف کردنِ چیزای جدیدی، یه ماجراجویِ واقعی!";
-            if(type === 'مهربون') answer = "تو خیلی ساده‌لوح و شکمویی، ولی قلبت از طلاست!";
-            
-            document.getElementById('result').innerText = "تحلیل ربات: " + answer;
-            
-            const synth = new SpeechSynthesisUtterance(answer);
-            synth.lang = 'fa-IR';
-            window.speechSynthesis.speak(synth);
-        }
-</script>
+    <script>
+        console.log("اسکریپت لود شد");
+    </script>
+</body>
+</html>
