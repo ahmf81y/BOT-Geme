@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>گیم‌مسترِ امیررضا</title>
+    <style>
+        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 2px solid #00ff41; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 15px #00ff41; }
+        button { padding: 15px 30px; font-size: 20px; cursor: pointer; background: transparent; color: #00ff41; border: 2px solid #00ff41; border-radius: 10px; }
+        #text { margin-top: 25px; font-size: 22px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🎮 گیم‌مسترِ امیررضا</h1>
+        <button onclick="start()">🎤 شروع چالش</button>
+        <p id="text">بگو "بازی" تا چالشت رو شروع کنم...</p>
+    </div>
+
+    <script>
+        let secretNum = 0;
+        let gameActive = false;
+
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'fa-IR';
+
+        function start() { rec.start(); }
+
+        rec.onresult = (event) => {
+            const input = event.results[0][0].transcript;
+            let output = "";
+
+            if (input.includes("بازی")) {
+                secretNum = Math.floor(Math.random() * 20) + 1;
+                gameActive = true;
+                output = "یه عدد بین ۱ تا ۲۰ انتخاب کردم. حدس بزن ببینم هوشت چقدره؟";
+            } else if (gameActive) {
+                const guess = parseInt(input.match(/\d+/));
+                if (guess === secretNum) {
+                    output = "ایول! درست حدس زدی، تو بردی!";
+                    gameActive = false;
+                } else {
+                    output = guess < secretNum ? "نه، عددم بزرگتره!" : "نه، عددم کوچیکتره!";
+                }
+            } else {
+                output = "داش، بگو 'بازی' تا مسابقه شروع بشه!";
+            }
+
+            document.getElementById('text').innerText = output;
+            const synth = new SpeechSynthesisUtterance(output);
+            synth.lang = 'fa-IR';
+            window.speechSynthesis.speak(synth);
+        };
+    </script>
+</body>
+</html>
