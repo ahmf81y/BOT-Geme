@@ -2,14 +2,30 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>سایکو-بات</title>
+    <title>تست صدا</title>
 </head>
 <body style="background:black; color:green; text-align:center;">
-    <h1>تستِ ربات</h1>
-    <button onclick="alert('کار کرد!')">تست کلیک</button>
+    <h1>رباتِ سخنگو</h1>
+    
+    <button id="startBtn" onclick="initAudio()">اول کلیک کن تا صدا فعال شه</button>
+    <br><br>
+    <button onclick="playTestSound()">تست صدای کلیک</button>
 
     <script>
-        console.log("اسکریپت لود شد");
+        const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
+
+        function initAudio() {
+            clickSound.play().then(() => {
+                clickSound.pause(); // صدا رو بلافاصله قطع میکنیم که مزاحم نشه
+                document.getElementById('startBtn').innerText = "صدا فعال شد!";
+                console.log("مجوز صدا گرفته شد");
+            });
+        }
+
+        function playTestSound() {
+            clickSound.currentTime = 0;
+            clickSound.play();
+        }
     </script>
 </body>
 </html>
