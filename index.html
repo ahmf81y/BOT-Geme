@@ -20,24 +20,36 @@
     <script>
         let secretNum = 0;
         let gameActive = false;
+        
+        // تبدیل اعداد فارسی به انگلیسی
+        function toEnglish(str) {
+            return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        }
+
         const numberMap = { "یک": 1, "دو": 2, "سه": 3, "چهار": 4, "پنج": 5, "شش": 6, "هفت": 7, "هشت": 8, "نه": 9, "ده": 10, "یازده": 11, "دوازده": 12, "سیزده": 13, "چهارده": 14, "پانزده": 15, "شانزده": 16, "هفده": 17, "هجده": 18, "نوزده": 19, "بیست": 20 };
 
         const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         rec.lang = 'fa-IR';
 
-        function start() { rec.start(); }
+        function start() { 
+            rec.start(); 
+            document.getElementById('text').innerText = "دارم گوش میدم..."; 
+        }
 
         rec.onresult = (event) => {
-            const input = event.results[0][0].transcript;
+            let input = event.results[0][0].transcript;
+            input = toEnglish(input); // تبدیل اعداد فارسی به انگلیسی
             let output = "";
 
             if (input.includes("بازی")) {
                 secretNum = Math.floor(Math.random() * 20) + 1;
                 gameActive = true;
-                output = "به چالش خوش اومدی! یه عدد بین ۱ تا ۲۰ انتخاب کردم. حدس بزن؟";
+                output = "یه عدد بین ۱ تا ۲۰ انتخاب کردم. حدس بزن؟";
             } else if (gameActive) {
                 let guess = parseInt(input.match(/\d+/));
-                if (isNaN(guess)) { for (let key in numberMap) { if (input.includes(key)) guess = numberMap[key]; } }
+                if (isNaN(guess)) { 
+                    for (let key in numberMap) { if (input.includes(key)) guess = numberMap[key]; } 
+                }
 
                 if (isNaN(guess)) { output = "عددی نشنیدم، دوباره بگو!"; }
                 else if (guess === secretNum) { output = "ایول! درست حدس زدی، تو بردی!"; gameActive = false; }
