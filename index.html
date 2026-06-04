@@ -1,46 +1,24 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>سایکو-بات امیررضا</title>
-    <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; text-align: center; padding: 50px; }
-        .box { border: 2px solid #0f0; padding: 30px; border-radius: 20px; display: inline-block; }
-        .btn-container { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
-        button { padding: 15px 25px; font-size: 18px; cursor: pointer; background: #222; color: #0f0; border: 2px solid #0f0; border-radius: 10px; transition: 0.2s; }
-        button:hover { background: #0f0; color: #000; }
-        #question { font-size: 24px; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1 id="question">اگه یه کلید جادویی پیدا کنی، باهاش چیکار می‌کنی؟</h1>
-        <div class="btn-container">
-            <button onclick="playClick(); showResult('مادی‌گرا')">می‌فروشمش!</button>
-            <button onclick="playClick(); showResult('ماجراجو')">بازش می‌کنم!</button>
-            <button onclick="playClick(); showResult('مهربون')">می‌خورمش! (چون گشنمه)</button>
-        </div>
-        <p id="result" style="margin-top: 30px; font-size: 20px;"></p>
-    </div>
+<script>
+        // تعریف متغیر صدا به صورت سراسری
+        const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
 
-    <script>
-        // صدای کلیک مکانیکی
         function playClick() {
-            const audio = new Audio('https://actions.google.com/sounds/v1/ui/click.ogg');
-            audio.play();
+            clickSound.currentTime = 0; // برای اینکه اگه سریع پشت هم زدن، صدا قطع نشه
+            clickSound.play();
         }
 
         function showResult(type) {
+            playClick(); // پخش صدا همزمان با کلیک
+            
             let answer = "";
             if(type === 'مادی‌گرا') answer = "تو آدمِ اقتصادی و باهوشی هستی، فقط پول برات مهمه!";
             if(type === 'ماجراجو') answer = "تو عاشقِ کشف کردنِ چیزای جدیدی، یه ماجراجویِ واقعی!";
-            if(type === 'مهربون') answer = "تو خیلی ساده‌لوح و شکمویی، ولی قلبت از طلاست! 😂";
+            if(type === 'مهربون') answer = "تو خیلی ساده‌لوح و شکمویی، ولی قلبت از طلاست!";
             
             document.getElementById('result').innerText = "تحلیل ربات: " + answer;
+            
             const synth = new SpeechSynthesisUtterance(answer);
             synth.lang = 'fa-IR';
             window.speechSynthesis.speak(synth);
         }
-    </script>
-</body>
-</html>
+</script>
