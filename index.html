@@ -1,49 +1,31 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>گیم‌مسترِ امیررضا</title>
-    <style>
-        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { border: 2px solid #00ff41; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 0 15px #00ff41; }
-        button { padding: 15px 30px; font-size: 20px; cursor: pointer; background: transparent; color: #00ff41; border: 2px solid #00ff41; border-radius: 10px; }
-        #text { margin-top: 25px; font-size: 22px; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1>🎮 گیم‌مسترِ امیررضا</h1>
-        <button onclick="start()">🎤 شروع چالش</button>
-        <p id="text">بگو "بازی" تا چالشت رو شروع کنم...</p>
-    </div>
-
-    <script>
-        let secretNum = 0;
-        let gameActive = false;
-
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'fa-IR';
-
-        function start() { rec.start(); }
-
-        rec.onresult = (event) => {
+rec.onresult = (event) => {
             const input = event.results[0][0].transcript;
             let output = "";
 
+            // تبدیل کلمات به عدد (برای اینکه ربات بفهمه چی گفتی)
+            const numberMap = { "یک": 1, "دو": 2, "سه": 3, "چهار": 4, "پنج": 5, "شش": 6, "هفت": 7, "هشت": 8, "نه": 9, "ده": 10, "یازده": 11, "دوازده": 12, "سیزده": 13, "چهارده": 14, "پانزده": 15, "شانزده": 16, "هفده": 17, "هجده": 18, "نوزده": 19, "بیست": 20 };
+            
             if (input.includes("بازی")) {
                 secretNum = Math.floor(Math.random() * 20) + 1;
                 gameActive = true;
-                output = "یه عدد بین ۱ تا ۲۰ انتخاب کردم. حدس بزن ببینم هوشت چقدره؟";
+                output = "عدد رو انتخاب کردم، حالا حدس بزن.";
             } else if (gameActive) {
-                const guess = parseInt(input.match(/\d+/));
-                if (guess === secretNum) {
+                // پیدا کردن عدد توی حرف‌های تو
+                let guess = parseInt(input.match(/\d+/)); // اگه عدد رو به صورت ریاضی گفتی
+                if (isNaN(guess)) { // اگه عدد رو به صورت کلمه گفتی
+                    for (let key in numberMap) { if (input.includes(key)) guess = numberMap[key]; }
+                }
+
+                if (isNaN(guess)) {
+                    output = "داداش عددی نشنیدم، دوباره بگو!";
+                } else if (guess === secretNum) {
                     output = "ایول! درست حدس زدی، تو بردی!";
                     gameActive = false;
                 } else {
-                    output = guess < secretNum ? "نه، عددم بزرگتره!" : "نه، عددم کوچیکتره!";
+                    output = guess < secretNum ? "نه، عدد بزرگتره!" : "نه، عدد کوچیکتره!";
                 }
             } else {
-                output = "داش، بگو 'بازی' تا مسابقه شروع بشه!";
+                output = "اول بگو 'بازی' تا شروع کنیم.";
             }
 
             document.getElementById('text').innerText = output;
@@ -51,6 +33,3 @@
             synth.lang = 'fa-IR';
             window.speechSynthesis.speak(synth);
         };
-    </script>
-</body>
-</html>
